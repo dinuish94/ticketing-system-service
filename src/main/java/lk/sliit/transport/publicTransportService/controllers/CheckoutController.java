@@ -11,17 +11,16 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
-@RequestMapping(path = "/checkin")
+@RequestMapping(path = "/checkout")
 @CrossOrigin(origins = "*")
-public class CheckinController {
+public class CheckoutController {
 
     @Autowired
     private TripService tripService;
 
     @PostMapping("/")
     @ResponseBody()
-    public Trip checkin(@RequestBody TripDTO tripDTO){
-        return tripService.checkin(tripDTO);
+    public Trip checkout(@RequestBody TripDTO tripDTO){
+        return tripService.checkout(tripDTO);
     }
-
 }

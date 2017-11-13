@@ -24,7 +24,6 @@ public class Bus {
 
     @ManyToOne
     @JoinColumn(name = "bus_category")
-    @JsonIgnore
     private BusCategory busCategory;
 
     public long getId() {

@@ -12,6 +12,8 @@ import lk.sliit.transport.publicTransportService.repositories.TripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Handles checkins
  *
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class CheckinService {
+public class TripService {
 
     @Autowired
     TripRepository tripRepository;
@@ -47,5 +49,14 @@ public class CheckinService {
         trip.setStartBusStop(busStop);
 
         return tripRepository.save(trip);
+    }
+
+    public void checkout(TripDTO tripDTO) {
+        List<Trip> trips = tripRepository.findByCard(cardRepository.findByTokenRef(tripDTO.getTokenRef()));
+        trips.forEach(trip -> {
+            if ( !trip.isCompleted() ){
+                // calculate sum
+            }
+        });
     }
 }

@@ -32,6 +32,8 @@ public class Trip {
 
     private float price;
 
+    private boolean isCompleted = false;
+
     public long getId() {
         return id;
     }
@@ -78,5 +80,13 @@ public class Trip {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
     }
 }
