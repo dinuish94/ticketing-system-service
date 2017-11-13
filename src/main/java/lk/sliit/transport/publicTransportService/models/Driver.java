@@ -14,7 +14,7 @@ public class Driver {
     private long id;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "bus_id")
     private Bus bus;
 
     public long getId() {

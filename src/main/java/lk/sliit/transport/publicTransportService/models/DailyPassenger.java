@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class DailyPassenger extends Passenger {
 
     @OneToOne
-    @JoinColumn(name = "accountId")
+    @JoinColumn(name = "account_id")
     private Account account;
 
     public Account getAccount() {

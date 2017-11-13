@@ -20,18 +20,17 @@ public class Trip {
 
     @ManyToOne
     @JoinColumn(name = "start_bus_stop_id")
-    @JsonIgnore
     private BusStop startBusStop;
 
     @ManyToOne
     @JoinColumn(name = "end_bus_stop_id")
-    @JsonIgnore
     private BusStop endBusStop;
 
     @ManyToOne
     @JoinColumn(name = "bus_id")
-    @JsonIgnore
     private Bus bus;
+
+    private float price;
 
     public long getId() {
         return id;
@@ -71,5 +70,13 @@ public class Trip {
 
     public void setBus(Bus bus) {
         this.bus = bus;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
     }
 }

@@ -1,5 +1,7 @@
 package lk.sliit.transport.publicTransportService.models;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +30,7 @@ public class Card {
     private List<Trip> trips;
 
     public Card() {
-        tokenRef = UUID.randomUUID().toString();
+        tokenRef = RandomStringUtils.random(8, true, true);
     }
 
     public long getId() {

@@ -15,6 +15,7 @@ public class Bus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bus", cascade = CascadeType.ALL)
     private List<Trip> trips;
 
