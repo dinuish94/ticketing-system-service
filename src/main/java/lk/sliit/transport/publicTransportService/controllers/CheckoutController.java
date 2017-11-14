@@ -20,7 +20,7 @@ public class CheckoutController {
 
     @PostMapping("/")
     @ResponseBody()
-    public Trip checkout(@RequestBody TripDTO tripDTO){
-        return tripService.checkout(tripDTO);
+    public void checkout(@RequestBody TripDTO tripDTO){
+        tripService.checkout(tripDTO);
     }
 }

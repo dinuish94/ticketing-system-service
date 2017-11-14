@@ -29,6 +29,11 @@ public class Card {
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<Trip> trips;
 
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    private List<Daypass> daypasses;
+
+    private double balance;
+
     public Card() {
         tokenRef = RandomStringUtils.random(8, true, true);
     }
@@ -79,5 +84,21 @@ public class Card {
 
     public void setTrips(List<Trip> trips) {
         this.trips = trips;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public List<Daypass> getDaypasses() {
+        return daypasses;
+    }
+
+    public void setDaypasses(List<Daypass> daypasses) {
+        this.daypasses = daypasses;
     }
 }

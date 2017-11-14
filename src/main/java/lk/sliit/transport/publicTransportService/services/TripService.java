@@ -13,10 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handles checkins
- *
+ * <p>
  * Created by dinukshakandasamanage on 11/13/17.
  */
 
@@ -35,28 +36,39 @@ public class TripService {
     @Autowired
     BusStopRepository busStopRepository;
 
-    public Trip checkin(TripDTO tripDTO){
+    public Trip checkin(TripDTO tripDTO) {
         Trip trip = new Trip();
         Card card = cardRepository.findByTokenRef(tripDTO.getTokenRef());
-        busRepository.findAll().forEach(bus -> {
-            if (tripDTO.getBusId() == bus.getId()){
-                trip.setBus(bus);
-            }
-        });
+
+        Bus bus = busRepository.findOne(tripDTO.getBusId());
         BusStop busStop = busStopRepository.findByLocation(tripDTO.getStartLocation());
 
+        trip.setBus(bus);
         trip.setCard(card);
         trip.setStartBusStop(busStop);
+
+        double price = bus.getBusCategory().getRate() * DistanceCalculationService.getDistance();
+
+        trip.setPrice(price);
+
+        if( price < card.getBalance()){
+            card.setBalance(card.getBalance() - price);
+            trip.setPayWithCash(0);
+            cardRepository.save(card);
+        } else {
+            trip.setPayWithCash(2);
+        }
 
         return tripRepository.save(trip);
     }
 
     public void checkout(TripDTO tripDTO) {
         List<Trip> trips = tripRepository.findByCard(cardRepository.findByTokenRef(tripDTO.getTokenRef()));
-        trips.forEach(trip -> {
-            if ( !trip.isCompleted() ){
-                // calculate sum
-            }
-        });
+
+        // Retrieve incomplete trips
+        List<Trip> incompleteTrips = trips.stream().filter(trip -> trip.isCompleted()==false).collect(Collectors.toList());
+
+        // Set most recent incomplete trip as completed
+        incompleteTrips.get(incompleteTrips.size()-1).setCompleted(true);
     }
 }

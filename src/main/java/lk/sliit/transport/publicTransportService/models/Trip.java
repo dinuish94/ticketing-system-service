@@ -30,9 +30,17 @@ public class Trip {
     @JoinColumn(name = "bus_id")
     private Bus bus;
 
-    private float price;
+    private double price;
 
     private boolean isCompleted = false;
+
+    /**
+     * Used to track whether the payment is done with cash or card
+     * 0 - card
+     * 1 - cash
+     * 2 - not applicable (this is the intermediate state where the user has not selected an option)
+     */
+    private int payWithCash;
 
     public long getId() {
         return id;
@@ -74,11 +82,11 @@ public class Trip {
         this.bus = bus;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -88,5 +96,13 @@ public class Trip {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
+    }
+
+    public int getPayWithCash() {
+        return payWithCash;
+    }
+
+    public void setPayWithCash(int payWithCash) {
+        this.payWithCash = payWithCash;
     }
 }

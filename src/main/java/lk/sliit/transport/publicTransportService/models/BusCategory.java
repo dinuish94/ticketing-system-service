@@ -19,6 +19,8 @@ public class BusCategory {
     @JsonIgnore
     private List<Bus> buses;
 
+    private String type;
+
     private double rate;
 
     public long getId() {
@@ -43,5 +45,13 @@ public class BusCategory {
 
     public void setRate(double rate) {
         this.rate = rate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
