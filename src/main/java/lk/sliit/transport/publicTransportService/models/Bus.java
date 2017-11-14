@@ -15,6 +15,7 @@ public class Bus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bus", cascade = CascadeType.ALL)
     private List<Trip> trips;
 
@@ -23,7 +24,6 @@ public class Bus {
 
     @ManyToOne
     @JoinColumn(name = "bus_category")
-    @JsonIgnore
     private BusCategory busCategory;
 
     public long getId() {

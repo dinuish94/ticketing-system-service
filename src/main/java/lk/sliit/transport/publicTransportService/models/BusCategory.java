@@ -1,5 +1,7 @@
 package lk.sliit.transport.publicTransportService.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,7 +16,12 @@ public class BusCategory {
     private long id;
 
     @OneToMany(mappedBy = "busCategory", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Bus> buses;
+
+    private String type;
+
+    private double rate;
 
     public long getId() {
         return id;
@@ -30,5 +37,21 @@ public class BusCategory {
 
     public void setBuses(List<Bus> buses) {
         this.buses = buses;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

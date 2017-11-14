@@ -3,19 +3,19 @@ package lk.sliit.transport.publicTransportService.models;
 import javax.persistence.*;
 
 /**
- * Created by dinukshakandasamanage on 11/12/17.
+ * Created by dinukshakandasamanage on 11/14/17.
  */
 
 @Entity
-public class Driver {
+public class Daypass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "bus_id")
-    private Bus bus;
+    @ManyToOne
+    @JoinColumn(name = "card_id")
+    private Card card;
 
     public long getId() {
         return id;
@@ -25,11 +25,11 @@ public class Driver {
         this.id = id;
     }
 
-    public Bus getBus() {
-        return bus;
+    public Card getCard() {
+        return card;
     }
 
-    public void setBus(Bus bus) {
-        this.bus = bus;
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

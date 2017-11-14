@@ -18,9 +18,11 @@ public class BusStop {
 
     private String location;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "startBusStop", cascade = CascadeType.ALL)
     private List<Trip> startTrips;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "endBusStop", cascade = CascadeType.ALL)
     private List<Trip> endTrips;
 

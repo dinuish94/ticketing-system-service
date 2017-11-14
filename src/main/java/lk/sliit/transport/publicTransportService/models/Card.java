@@ -1,5 +1,7 @@
 package lk.sliit.transport.publicTransportService.models;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +29,13 @@ public class Card {
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<Trip> trips;
 
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    private List<Daypass> daypasses;
+
+    private double balance;
+
     public Card() {
-        tokenRef = UUID.randomUUID().toString();
+        tokenRef = RandomStringUtils.random(8, true, true);
     }
 
     public long getId() {
@@ -77,5 +84,21 @@ public class Card {
 
     public void setTrips(List<Trip> trips) {
         this.trips = trips;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public List<Daypass> getDaypasses() {
+        return daypasses;
+    }
+
+    public void setDaypasses(List<Daypass> daypasses) {
+        this.daypasses = daypasses;
     }
 }

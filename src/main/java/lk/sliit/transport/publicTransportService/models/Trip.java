@@ -20,18 +20,27 @@ public class Trip {
 
     @ManyToOne
     @JoinColumn(name = "start_bus_stop_id")
-    @JsonIgnore
     private BusStop startBusStop;
 
     @ManyToOne
     @JoinColumn(name = "end_bus_stop_id")
-    @JsonIgnore
     private BusStop endBusStop;
 
     @ManyToOne
     @JoinColumn(name = "bus_id")
-    @JsonIgnore
     private Bus bus;
+
+    private double price;
+
+    private boolean isCompleted = false;
+
+    /**
+     * Used to track whether the payment is done with cash or card
+     * 0 - card
+     * 1 - cash
+     * 2 - not applicable (this is the intermediate state where the user has not selected an option)
+     */
+    private int payWithCash;
 
     public long getId() {
         return id;
@@ -71,5 +80,29 @@ public class Trip {
 
     public void setBus(Bus bus) {
         this.bus = bus;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public int getPayWithCash() {
+        return payWithCash;
+    }
+
+    public void setPayWithCash(int payWithCash) {
+        this.payWithCash = payWithCash;
     }
 }

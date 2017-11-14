@@ -19,7 +19,7 @@ public class Account {
     private DailyPassenger dailyPassenger;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "card_id")
     private Card card;
 
     public Long getAccountId() {
