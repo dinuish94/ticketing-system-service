@@ -20,6 +20,16 @@ public class TopUp {
     @JsonIgnore
     private Card card;
 
+    private double amount;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
     public long getId() {
         return id;
     }

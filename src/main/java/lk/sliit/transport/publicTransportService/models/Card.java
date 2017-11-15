@@ -20,7 +20,7 @@ public class Card {
     private String tokenRef;
     private Date expDate;
 
-    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, optional = false)
+    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, optional = true)
     private Account account;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
@@ -31,6 +31,17 @@ public class Card {
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<Daypass> daypasses;
+
+    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, optional = true)
+    private Visitor visitor;
+
+    public Visitor getVisitor() {
+        return visitor;
+    }
+
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
+    }
 
     private double balance;
 
