@@ -55,9 +55,6 @@ public class Application implements CommandLineRunner {
         card = cardRepository.save(card);
         System.out.println(card.getTokenRef());
 
-        passenger.setCard(card);
-        passenger = passengerRepository.save(passenger);
-        System.out.println(cardRepository.save(card).getTokenRef());
 
         Account account = new Account();
         account.setCard(card);
