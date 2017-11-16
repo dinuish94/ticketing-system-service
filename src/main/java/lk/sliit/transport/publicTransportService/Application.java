@@ -29,20 +29,25 @@ public class Application implements CommandLineRunner {
     @Autowired
     BusCategoryRepository busCategoryRepository;
 
+    @Autowired
+    AccountRepository accountRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
     @Override
     public void run(String... strings) throws Exception {
+
+        Card card4 = new Card();
+        card4.setBalance(50);
+        System.out.println(cardRepository.save(card4).getTokenRef());
+
         Visitor passenger = new Visitor();
         passenger.setName("Visitor 1");
-
-        passenger = passengerRepository.save(passenger);
-
-        passengerRepository.findAll().forEach(passenger1 -> {
-            System.out.println(passenger1.toString());
-        });
+        passenger.setAddress("Negombo");
+        passenger.setCard(card4);
+        passengerRepository.save(passenger);
 
         Card card = new Card();
         card.setBalance(200);
@@ -52,6 +57,43 @@ public class Application implements CommandLineRunner {
 
         passenger.setCard(card);
         passenger = passengerRepository.save(passenger);
+        System.out.println(cardRepository.save(card).getTokenRef());
+
+        Account account = new Account();
+        account.setCard(card);
+        account.setRole(1);
+        account.setUsername("Bruce");
+        account.setPassword("123");
+        accountRepository.save(account);
+
+        DailyPassenger passenger2 = new DailyPassenger();
+        passenger2.setName("Bruce Wayne");
+        passenger2.setAddress("Gotham");
+        passenger2.setAccount(account);
+        passenger2.setEmail("bruce@gmail.com");
+        passengerRepository.save(passenger2);
+
+        Card card2 = new Card();
+        card2.setBalance(300);
+        System.out.println(cardRepository.save(card2).getTokenRef());
+
+        Account account2 = new Account();
+        account2.setCard(card2);
+        account2.setRole(1);
+        account2.setUsername("Jonathan");
+        account2.setPassword("123");
+        accountRepository.save(account2);
+
+        DailyPassenger passenger3 = new DailyPassenger();
+        passenger3.setName("Jonathan");
+        passenger3.setAddress("Colombo");
+        passenger3.setAccount(account2);
+        passenger3.setEmail("jonathan@gmail.com");
+        passengerRepository.save(passenger3);
+
+        passengerRepository.findAll().forEach(passenger1 -> {
+            System.out.println(passenger1.toString());
+        });
 
         BusCategory busCategory = new BusCategory();
         busCategory.setRate(20);

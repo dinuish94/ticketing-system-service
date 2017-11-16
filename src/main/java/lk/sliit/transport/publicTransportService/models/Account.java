@@ -19,6 +19,15 @@ public class Account {
 
     @JsonIgnore
     private String password;
+    private Integer role;
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
+    }
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, optional = false)
     private DailyPassenger dailyPassenger;
