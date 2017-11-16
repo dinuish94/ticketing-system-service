@@ -1,5 +1,7 @@
 package lk.sliit.transport.publicTransportService.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**

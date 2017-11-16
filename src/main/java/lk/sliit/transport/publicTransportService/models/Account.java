@@ -30,10 +30,12 @@ public class Account {
     }
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, optional = false)
+    @JsonIgnore
     private DailyPassenger dailyPassenger;
 
     @OneToOne
     @JoinColumn(name = "card_id")
+    @JsonIgnore
     private Card card;
 
     public Long getAccountId() {
