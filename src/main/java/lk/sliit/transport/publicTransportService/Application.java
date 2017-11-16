@@ -51,6 +51,12 @@ public class Application implements CommandLineRunner {
 
         Card card = new Card();
         card.setBalance(200);
+        card.setVisitor(passenger);
+        card = cardRepository.save(card);
+        System.out.println(card.getTokenRef());
+
+        passenger.setCard(card);
+        passenger = passengerRepository.save(passenger);
         System.out.println(cardRepository.save(card).getTokenRef());
 
         Account account = new Account();
@@ -88,7 +94,6 @@ public class Application implements CommandLineRunner {
         passengerRepository.findAll().forEach(passenger1 -> {
             System.out.println(passenger1.toString());
         });
-
 
         BusCategory busCategory = new BusCategory();
         busCategory.setRate(20);

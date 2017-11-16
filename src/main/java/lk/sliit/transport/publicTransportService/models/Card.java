@@ -1,5 +1,6 @@
 package lk.sliit.transport.publicTransportService.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.persistence.*;
@@ -32,17 +33,10 @@ public class Card {
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<Daypass> daypasses;
 
-    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, optional = true)
+    @JsonIgnore
+    @OneToOne(mappedBy = "card")
     private Visitor visitor;
-
-    public Visitor getVisitor() {
-        return visitor;
-    }
-
-    public void setVisitor(Visitor visitor) {
-        this.visitor = visitor;
-    }
-
+  
     private double balance;
 
     public Card() {
@@ -111,5 +105,13 @@ public class Card {
 
     public void setDaypasses(List<Daypass> daypasses) {
         this.daypasses = daypasses;
+    }
+
+    public Visitor getVisitor() {
+        return visitor;
+    }
+
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
     }
 }

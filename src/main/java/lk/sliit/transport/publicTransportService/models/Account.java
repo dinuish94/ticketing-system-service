@@ -1,5 +1,7 @@
 package lk.sliit.transport.publicTransportService.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -12,7 +14,10 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
 
+    @JsonIgnore
     private String username;
+
+    @JsonIgnore
     private String password;
     private Integer role;
 
