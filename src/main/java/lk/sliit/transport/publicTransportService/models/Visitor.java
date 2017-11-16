@@ -1,7 +1,5 @@
 package lk.sliit.transport.publicTransportService.models;
 
-import javax.persistence.CascadeType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
