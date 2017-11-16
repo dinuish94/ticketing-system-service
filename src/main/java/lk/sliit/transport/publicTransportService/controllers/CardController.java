@@ -22,7 +22,7 @@ public class CardController {
 
     @GetMapping("/")
     @ResponseBody()
-    public List<Card> getAllAssignments(){
+    public List<Card> getAllCards(){
         List<Card> cards = new ArrayList<>();
         cardRepository.findAll().forEach(card -> {
             cards.add(card);
