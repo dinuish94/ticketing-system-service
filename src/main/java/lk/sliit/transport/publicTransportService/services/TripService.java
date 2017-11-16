@@ -41,11 +41,13 @@ public class TripService {
         Card card = cardRepository.findByTokenRef(tripDTO.getTokenRef());
 
         Bus bus = busRepository.findOne(tripDTO.getBusId());
-        BusStop busStop = busStopRepository.findByLocation(tripDTO.getStartLocation());
+        BusStop startBusStop = busStopRepository.findByLocation(tripDTO.getStartLocation());
+        BusStop endBusStop = busStopRepository.findByLocation(tripDTO.getStartLocation());
 
         trip.setBus(bus);
         trip.setCard(card);
-        trip.setStartBusStop(busStop);
+        trip.setStartBusStop(startBusStop);
+        trip.setStartBusStop(endBusStop);
 
         double price = bus.getBusCategory().getRate() * DistanceCalculationService.getDistance();
 

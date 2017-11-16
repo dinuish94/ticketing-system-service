@@ -35,10 +35,10 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        Passenger passenger = new Visitor();
+        Visitor passenger = new Visitor();
         passenger.setName("Visitor 1");
 
-        passengerRepository.save(passenger);
+        passenger = passengerRepository.save(passenger);
 
         passengerRepository.findAll().forEach(passenger1 -> {
             System.out.println(passenger1.toString());
@@ -46,7 +46,12 @@ public class Application implements CommandLineRunner {
 
         Card card = new Card();
         card.setBalance(200);
-        System.out.println(cardRepository.save(card).getTokenRef());
+        card.setVisitor(passenger);
+        card = cardRepository.save(card);
+        System.out.println(card.getTokenRef());
+
+        passenger.setCard(card);
+        passenger = passengerRepository.save(passenger);
 
         BusCategory busCategory = new BusCategory();
         busCategory.setRate(20);
