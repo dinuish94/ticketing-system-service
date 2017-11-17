@@ -68,14 +68,16 @@ public class TripService {
         return tripRepository.save(trip);
     }
 
-    public void checkout(TripDTO tripDTO) {
+    public Trip checkout(TripDTO tripDTO) {
         List<Trip> trips = tripRepository.findByCard(cardRepository.findByTokenRef(tripDTO.getTokenRef()));
 
         // Retrieve incomplete trips
         List<Trip> incompleteTrips = trips.stream().filter(trip -> trip.isCompleted() == false).collect(Collectors.toList());
 
         // Set most recent incomplete trip as completed
-        incompleteTrips.get(incompleteTrips.size() - 1).setCompleted(true);
+        Trip trip = incompleteTrips.get(incompleteTrips.size() - 1);
+        trip.setCompleted(true);
+        return tripRepository.save(trip);
     }
 
     public Trip confirmCheckin(TripDTO tripDTO) {

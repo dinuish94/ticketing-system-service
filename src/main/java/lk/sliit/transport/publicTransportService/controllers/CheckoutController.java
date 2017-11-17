@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * Handles journey checkouts
+ *
  * Created by dinukshakandasamanage on 11/13/17.
  */
 
@@ -20,7 +22,7 @@ public class CheckoutController {
 
     @PostMapping("/")
     @ResponseBody()
-    public void checkout(@RequestBody TripDTO tripDTO){
-        tripService.checkout(tripDTO);
+    public Trip checkout(@RequestBody TripDTO tripDTO){
+        return tripService.checkout(tripDTO);
     }
 }
