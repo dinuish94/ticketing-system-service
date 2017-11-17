@@ -43,4 +43,9 @@ public class CheckinController {
         return cardService.findPassengerByToken(token);
     }
 
+    @PutMapping("/")
+    @ResponseBody()
+    public Trip confirmCheckin(@RequestBody TripDTO tripDTO){
+        return tripService.confirmCheckin(tripDTO);
+    }
 }

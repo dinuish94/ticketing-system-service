@@ -49,14 +49,18 @@ public class TripService {
         trip.setStartBusStop(startBusStop);
         trip.setStartBusStop(endBusStop);
 
-        double price = bus.getBusCategory().getRate() * DistanceCalculationService.getDistance();
+        int distance = DistanceCalculationService.getDistance();
+        double rate = bus.getBusCategory().getRate();
+        double price = rate * distance;
+
+        trip.setRate(rate);
+        trip.setDistance(distance);
 
         trip.setPrice(price);
+        trip.setCurrentBalance(card.getBalance());
 
-        if( price < card.getBalance()){
-            card.setBalance(card.getBalance() - price);
+        if (price < card.getBalance()) {
             trip.setPayWithCash(0);
-            cardRepository.save(card);
         } else {
             trip.setPayWithCash(2);
         }
@@ -68,9 +72,23 @@ public class TripService {
         List<Trip> trips = tripRepository.findByCard(cardRepository.findByTokenRef(tripDTO.getTokenRef()));
 
         // Retrieve incomplete trips
-        List<Trip> incompleteTrips = trips.stream().filter(trip -> trip.isCompleted()==false).collect(Collectors.toList());
+        List<Trip> incompleteTrips = trips.stream().filter(trip -> trip.isCompleted() == false).collect(Collectors.toList());
 
         // Set most recent incomplete trip as completed
-        incompleteTrips.get(incompleteTrips.size()-1).setCompleted(true);
+        incompleteTrips.get(incompleteTrips.size() - 1).setCompleted(true);
+    }
+
+    public Trip confirmCheckin(TripDTO tripDTO) {
+        Trip trip = tripRepository.findOne(tripDTO.getId());
+        Card card = cardRepository.findByTokenRef(tripDTO.getTokenRef());
+
+        // If the payment is to be made with Cash reduce it from the card balance
+        if (tripDTO.getPayWithCash() == 0) {
+            card.setBalance(card.getBalance() - trip.getPrice());
+            cardRepository.save(card);
+        }
+
+        trip.setPayWithCash(tripDTO.getPayWithCash());
+        return tripRepository.save(trip);
     }
 }

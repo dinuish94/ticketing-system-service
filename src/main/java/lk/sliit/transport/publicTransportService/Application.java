@@ -106,6 +106,18 @@ public class Application implements CommandLineRunner {
         busStop.setLocation("Kolpitty");
         System.out.println(busStopRepository.save(busStop));
 
+        BusStop busStop1 = new BusStop();
+        busStop1.setLocation("Bambalapitiya");
+        System.out.println(busStopRepository.save(busStop1));
+
+        BusStop busStop2 = new BusStop();
+        busStop2.setLocation("Galle");
+        System.out.println(busStopRepository.save(busStop2));
+
+        BusStop busStop3 = new BusStop();
+        busStop3.setLocation("Kandy");
+        System.out.println(busStopRepository.save(busStop3));
+
 //        System.out.println(busRepository.findOne(bus.getId()).getId());
     }
 }

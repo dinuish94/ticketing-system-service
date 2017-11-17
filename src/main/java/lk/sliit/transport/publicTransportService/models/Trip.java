@@ -34,6 +34,12 @@ public class Trip {
 
     private boolean isCompleted = false;
 
+    private int distance;
+
+    private double rate;
+
+    private double currentBalance;
+
     /**
      * Used to track whether the payment is done with cash or card
      * 0 - card
@@ -104,5 +110,29 @@ public class Trip {
 
     public void setPayWithCash(int payWithCash) {
         this.payWithCash = payWithCash;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public double getCurrentBalance() {
+        return currentBalance;
+    }
+
+    public void setCurrentBalance(double currentBalance) {
+        this.currentBalance = currentBalance;
     }
 }
