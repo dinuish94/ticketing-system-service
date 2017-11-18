@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jonathan on 11/15/2017.
  */
@@ -34,6 +37,22 @@ public class TopupService {
         cardRepository.save(card);
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    /**
+     * Retrieves top up history for a particular passenger
+     *
+     * @param token for the passenger card
+     * @return
+     */
+    public List<TopUp> getTopUpsForPassenger(String token){
+        List<TopUp> topUps = new ArrayList<>();
+
+        Card card = cardRepository.findByTokenRef(token);
+        if (card != null){
+            card.getTopUps().forEach(trip -> topUps.add(trip));
+        }
+        return topUps;
     }
 
 
