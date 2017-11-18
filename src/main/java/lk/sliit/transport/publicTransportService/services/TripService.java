@@ -2,6 +2,7 @@ package lk.sliit.transport.publicTransportService.services;
 
 import lk.sliit.transport.publicTransportService.dtos.JourneyDTO;
 import lk.sliit.transport.publicTransportService.dtos.TripDTO;
+import lk.sliit.transport.publicTransportService.exceptions.CardNotFoundException;
 import lk.sliit.transport.publicTransportService.models.Bus;
 import lk.sliit.transport.publicTransportService.models.BusStop;
 import lk.sliit.transport.publicTransportService.models.Card;
@@ -80,6 +81,29 @@ public class TripService {
     }
 
     /**
+     * Confirms the trip
+     * Fee is reduced from the balance if sufficient amount is remaining in the card
+     * Else record is marked as to be paid with cash
+     *
+     * @param tripDTO
+     * @return
+     */
+    public Trip confirmCheckin(TripDTO tripDTO) {
+        Trip trip = tripRepository.findOne(tripDTO.getId());
+        Card card = cardRepository.findByTokenRef(tripDTO.getTokenRef());
+
+        // If the payment is to be made with Cash reduce it from the card balance
+        if (tripDTO.getPayWithCash() == 0) {
+            card.setBalance(card.getBalance() - trip.getPrice());
+            trip.setPaymentDone(true);
+            cardRepository.save(card);
+        }
+
+        trip.setPayWithCash(tripDTO.getPayWithCash());
+        return tripRepository.save(trip);
+    }
+
+    /**
      * Retrieves the most recent incomplete trip for a particular card and marks it as complete
      *
      * @param tripDTO
@@ -97,19 +121,6 @@ public class TripService {
         return tripRepository.save(trip);
     }
 
-    public Trip confirmCheckin(TripDTO tripDTO) {
-        Trip trip = tripRepository.findOne(tripDTO.getId());
-        Card card = cardRepository.findByTokenRef(tripDTO.getTokenRef());
-
-        // If the payment is to be made with Cash reduce it from the card balance
-        if (tripDTO.getPayWithCash() == 0) {
-            card.setBalance(card.getBalance() - trip.getPrice());
-            cardRepository.save(card);
-        }
-
-        trip.setPayWithCash(tripDTO.getPayWithCash());
-        return tripRepository.save(trip);
-    }
 
     /**
      * Retrieves a list of trips that are not yet completed for a particular bus
@@ -121,15 +132,15 @@ public class TripService {
     public List<JourneyDTO> getTripsForBus(long busId) {
         List<JourneyDTO> journeys = new ArrayList<>();
         tripRepository.findAll().forEach(trip -> {
-            if (trip.getBus().getId() == busId && !trip.isCompleted() && trip.getPayWithCash()==1 ) {
+            if (trip.getBus().getId() == busId && !trip.isCompleted() && trip.getPayWithCash() == 1 && !trip.isPaymentDone()) {
                 JourneyDTO journey = new JourneyDTO();
                 journey.setId(trip.getId());
                 journey.setRate(trip.getRate());
                 journey.setPrice(trip.getPrice());
                 // If the passenger is a visitor
-                if (trip.getCard().getVisitor() != null){
+                if (trip.getCard().getVisitor() != null) {
                     journey.setPassenger(trip.getCard().getVisitor().getName());
-                } else if (trip.getCard().getAccount().getDailyPassenger() != null){
+                } else if (trip.getCard().getAccount().getDailyPassenger() != null) {
                     journey.setPassenger(trip.getCard().getAccount().getDailyPassenger().getName());
                 }
                 journey.setStartBusStop(trip.getStartBusStop().getLocation());
@@ -148,13 +159,28 @@ public class TripService {
      * @param token token of the card belonging to a certain passenger
      * @return the list of trips
      */
-    public List<Trip> getTripsForPassenger(String token){
+    public List<Trip> getTripsForPassenger(String token) {
         List<Trip> trips = new ArrayList<>();
 
         Card card = cardRepository.findByTokenRef(token);
-        if (card != null){
+        if (card != null) {
             card.getTrips().forEach(trip -> trips.add(trip));
         }
         return trips;
+    }
+
+    /**
+     * Confirms a payment done by cash
+     *
+     * @param tripId
+     * @return
+     */
+    public Trip confirmPayment(long tripId) throws CardNotFoundException {
+        Trip trip = tripRepository.findOne(tripId);
+        if (trip != null) {
+            trip.setPaymentDone(true);
+            return tripRepository.save(trip);
+        }
+        throw new CardNotFoundException();
     }
 }

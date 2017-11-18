@@ -1,6 +1,7 @@
 package lk.sliit.transport.publicTransportService.controllers;
 
 import lk.sliit.transport.publicTransportService.dtos.TripDTO;
+import lk.sliit.transport.publicTransportService.exceptions.CardNotFoundException;
 import lk.sliit.transport.publicTransportService.models.Trip;
 import lk.sliit.transport.publicTransportService.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,10 @@ public class CheckoutController {
     @ResponseBody()
     public Trip checkout(@RequestBody TripDTO tripDTO){
         return tripService.checkout(tripDTO);
+    }
+
+    @PostMapping("")
+    public Trip confirmPaymentByCash(@RequestParam("tripId") long tripId) throws CardNotFoundException {
+        return tripService.confirmPayment(tripId);
     }
 }
