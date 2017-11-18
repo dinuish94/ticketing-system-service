@@ -2,6 +2,7 @@ package lk.sliit.transport.publicTransportService.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by dinukshakandasamanage on 11/12/17.
@@ -39,6 +40,37 @@ public class Trip {
     private double rate;
 
     private double currentBalance;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    private Date date;
+
+    private String startTime;
+
+    private String endTime;
+
 
     /**
      * Used to track whether the payment is done with cash or card
