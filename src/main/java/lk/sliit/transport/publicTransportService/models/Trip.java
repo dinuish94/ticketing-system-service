@@ -40,6 +40,8 @@ public class Trip {
 
     private double currentBalance;
 
+    private boolean paymentDone;
+
     /**
      * Used to track whether the payment is done with cash or card
      * 0 - card
@@ -134,5 +136,13 @@ public class Trip {
 
     public void setCurrentBalance(double currentBalance) {
         this.currentBalance = currentBalance;
+    }
+
+    public boolean isPaymentDone() {
+        return paymentDone;
+    }
+
+    public void setPaymentDone(boolean paymentDone) {
+        this.paymentDone = paymentDone;
     }
 }
