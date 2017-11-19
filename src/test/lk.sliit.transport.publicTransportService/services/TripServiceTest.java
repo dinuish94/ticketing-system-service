@@ -85,8 +85,6 @@ public class TripServiceTest {
     @Autowired
     private ServletContext servletContext;
 
-    DistanceCalculationService distanceCalculationService;
-
     Trip trip = new Trip();
 
     @Before

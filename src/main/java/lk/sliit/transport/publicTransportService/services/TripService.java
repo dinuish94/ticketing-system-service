@@ -1,11 +1,8 @@
 package lk.sliit.transport.publicTransportService.services;
 
-import lk.sliit.transport.publicTransportService.controllers.CheckoutController;
 import lk.sliit.transport.publicTransportService.dtos.JourneyDTO;
 import lk.sliit.transport.publicTransportService.dtos.TripDTO;
-import lk.sliit.transport.publicTransportService.exceptions.CardNotFoundException;
 import lk.sliit.transport.publicTransportService.exceptions.InvalidDataException;
-import lk.sliit.transport.publicTransportService.exceptions.PaymentIncompleteException;
 import lk.sliit.transport.publicTransportService.models.Bus;
 import lk.sliit.transport.publicTransportService.models.BusStop;
 import lk.sliit.transport.publicTransportService.models.Card;

@@ -1,6 +1,5 @@
 package lk.sliit.transport.publicTransportService.services;
 
-import lk.sliit.transport.publicTransportService.dtos.PassengerDTO;
 import lk.sliit.transport.publicTransportService.models.Passenger;
 import lk.sliit.transport.publicTransportService.repositories.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
