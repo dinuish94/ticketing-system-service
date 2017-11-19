@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * Created by dinukshakandasamanage on 11/19/17.
  */
-@ResponseStatus(value= HttpStatus.NOT_FOUND, reason="The Token Reference was not found")
+@ResponseStatus(value= HttpStatus.NOT_FOUND, reason="Invalid Data provided!")
 public class InvalidDataException extends Exception{
 
     public InvalidDataException() {

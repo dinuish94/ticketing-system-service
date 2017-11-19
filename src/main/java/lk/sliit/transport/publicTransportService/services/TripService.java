@@ -1,11 +1,8 @@
 package lk.sliit.transport.publicTransportService.services;
 
-import lk.sliit.transport.publicTransportService.controllers.CheckoutController;
 import lk.sliit.transport.publicTransportService.dtos.JourneyDTO;
 import lk.sliit.transport.publicTransportService.dtos.TripDTO;
-import lk.sliit.transport.publicTransportService.exceptions.CardNotFoundException;
 import lk.sliit.transport.publicTransportService.exceptions.InvalidDataException;
-import lk.sliit.transport.publicTransportService.exceptions.PaymentIncompleteException;
 import lk.sliit.transport.publicTransportService.models.Bus;
 import lk.sliit.transport.publicTransportService.models.BusStop;
 import lk.sliit.transport.publicTransportService.models.Card;
@@ -196,22 +193,6 @@ public class TripService {
             }
         });
         return journeys;
-    }
-
-    /**
-     * Retrieves the list of journeys that a particular user has taken
-     *
-     * @param token token of the card belonging to a certain passenger
-     * @return the list of trips
-     */
-    public List<Trip> getTripsForPassenger(String token) {
-        List<Trip> trips = new ArrayList<>();
-
-        Card card = cardRepository.findByTokenRef(token);
-        if (card != null) {
-            card.getTrips().forEach(trips::add);
-        }
-        return trips;
     }
 
     /**
