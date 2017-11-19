@@ -196,22 +196,6 @@ public class TripService {
     }
 
     /**
-     * Retrieves the list of journeys that a particular user has taken
-     *
-     * @param token token of the card belonging to a certain passenger
-     * @return the list of trips
-     */
-    public List<Trip> getTripsForPassenger(String token) {
-        List<Trip> trips = new ArrayList<>();
-
-        Card card = cardRepository.findByTokenRef(token);
-        if (card != null) {
-            card.getTrips().forEach(trips::add);
-        }
-        return trips;
-    }
-
-    /**
      * Confirms a payment done by cash
      *
      * @param tripId
