@@ -1,8 +1,11 @@
 package lk.sliit.transport.publicTransportService.services;
 
+import lk.sliit.transport.publicTransportService.controllers.CheckoutController;
 import lk.sliit.transport.publicTransportService.dtos.JourneyDTO;
 import lk.sliit.transport.publicTransportService.dtos.TripDTO;
 import lk.sliit.transport.publicTransportService.exceptions.CardNotFoundException;
+import lk.sliit.transport.publicTransportService.exceptions.InvalidDataException;
+import lk.sliit.transport.publicTransportService.exceptions.PaymentIncompleteException;
 import lk.sliit.transport.publicTransportService.models.Bus;
 import lk.sliit.transport.publicTransportService.models.BusStop;
 import lk.sliit.transport.publicTransportService.models.Card;
@@ -11,6 +14,8 @@ import lk.sliit.transport.publicTransportService.repositories.BusRepository;
 import lk.sliit.transport.publicTransportService.repositories.BusStopRepository;
 import lk.sliit.transport.publicTransportService.repositories.CardRepository;
 import lk.sliit.transport.publicTransportService.repositories.TripRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,19 +44,37 @@ public class TripService {
     @Autowired
     BusStopRepository busStopRepository;
 
+    Logger logger = LoggerFactory.getLogger(TripService.class);
+
     /**
      * Creates a trip
      *
      * @param tripDTO
      * @return
      */
-    public Trip checkin(TripDTO tripDTO) {
+    public Trip checkin(TripDTO tripDTO) throws InvalidDataException {
         Trip trip = new Trip();
+        logger.info("Retrieving card by token " + tripDTO.getTokenRef() + " ...");
         Card card = cardRepository.findByTokenRef(tripDTO.getTokenRef());
 
+        if (null == card) {
+            logger.error("Invalid Token!");
+            throw new InvalidDataException("Invalid Token!");
+        }
+
         Bus bus = busRepository.findOne(tripDTO.getBusId());
+
+        if (null == bus){
+            logger.error("Invalid Bus ID!");
+            throw new InvalidDataException("Invalid Bus ID!");
+        }
         BusStop startBusStop = busStopRepository.findByLocation(tripDTO.getStartLocation());
         BusStop endBusStop = busStopRepository.findByLocation(tripDTO.getEndLocation());
+
+        if (null == startBusStop || null == endBusStop){
+            logger.error("Invalid Bus Stop Location!");
+            throw new InvalidDataException("Invalid Bus Stop Location!");
+        }
 
         trip.setBus(bus);
         trip.setCard(card);
@@ -69,11 +92,14 @@ public class TripService {
         trip.setCurrentBalance(card.getBalance());
 
         // If the card has sufficient balance to complete the journey
-        if (price < card.getBalance()) {
+        if (price <= card.getBalance()) {
+            logger.info("Passenger has sufficient balance in card ...");
             trip.setPayWithCash(0);
         } else {
             // User will have to confirm later if they want to pay with cash or not
             // till then we assign an intermediary state as 2
+            logger.info("Passenger has insufficient balance in card ...");
+            logger.info("Setting payment option to cash ...");
             trip.setPayWithCash(2);
         }
 
@@ -94,7 +120,9 @@ public class TripService {
 
         // If the payment is to be made with Cash reduce it from the card balance
         if (tripDTO.getPayWithCash() == 0) {
+            logger.info("Reducing fee from balance in card ...");
             card.setBalance(card.getBalance() - trip.getPrice());
+            logger.info("Payment is complete ...");
             trip.setPaymentDone(true);
             cardRepository.save(card);
         }
@@ -109,14 +137,27 @@ public class TripService {
      * @param tripDTO
      * @return
      */
-    public Trip checkout(TripDTO tripDTO) {
+    public Trip checkout(TripDTO tripDTO) throws InvalidDataException {
         List<Trip> trips = tripRepository.findByCard(cardRepository.findByTokenRef(tripDTO.getTokenRef()));
 
-        // Retrieve incomplete trips
-        List<Trip> incompleteTrips = trips.stream().filter(trip -> trip.isCompleted() == false).collect(Collectors.toList());
+        if (null == trips){
+            logger.error("No trips found for this card!");
+            throw new InvalidDataException("No trips found for this card!");
+        }
 
+        // Retrieve incomplete trips
+        List<Trip> incompleteTrips = trips.stream().filter(trip -> !trip.isCompleted()).collect(Collectors.toList());
+
+        logger.info("Retrieving most recent incomplete trip ...");
         // Set most recent incomplete trip as completed
         Trip trip = incompleteTrips.get(incompleteTrips.size() - 1);
+
+        // Check if the payment method is cash, whether the payment is confirmed by the driver.
+        if (!trip.isPaymentDone() && trip.getPayWithCash() == 1) {
+            logger.error("Payment is not done for the trip! Checkout unsuccessful!");
+            return trip;
+        }
+        logger.info("Checking out ...");
         trip.setCompleted(true);
         return tripRepository.save(trip);
     }
@@ -131,18 +172,22 @@ public class TripService {
      */
     public List<JourneyDTO> getTripsForBus(long busId) {
         List<JourneyDTO> journeys = new ArrayList<>();
+
+        logger.info("Retrieving trips for" + busId + "...");
         tripRepository.findAll().forEach(trip -> {
             if (trip.getBus().getId() == busId && !trip.isCompleted() && trip.getPayWithCash() == 1 && !trip.isPaymentDone()) {
                 JourneyDTO journey = new JourneyDTO();
                 journey.setId(trip.getId());
                 journey.setRate(trip.getRate());
                 journey.setPrice(trip.getPrice());
+
                 // If the passenger is a visitor
                 if (trip.getCard().getVisitor() != null) {
                     journey.setPassenger(trip.getCard().getVisitor().getName());
                 } else if (trip.getCard().getAccount().getDailyPassenger() != null) {
                     journey.setPassenger(trip.getCard().getAccount().getDailyPassenger().getName());
                 }
+
                 journey.setStartBusStop(trip.getStartBusStop().getLocation());
                 journey.setEndBusStop(trip.getEndBusStop().getLocation());
                 journey.setTokenRef(trip.getCard().getTokenRef());
@@ -164,7 +209,7 @@ public class TripService {
 
         Card card = cardRepository.findByTokenRef(token);
         if (card != null) {
-            card.getTrips().forEach(trip -> trips.add(trip));
+            card.getTrips().forEach(trips::add);
         }
         return trips;
     }
@@ -175,12 +220,14 @@ public class TripService {
      * @param tripId
      * @return
      */
-    public Trip confirmPayment(long tripId) throws CardNotFoundException {
+    public Trip confirmPayment(long tripId) throws InvalidDataException {
         Trip trip = tripRepository.findOne(tripId);
         if (trip != null) {
+            logger.info("Confirming payment for" + tripId + "...");
             trip.setPaymentDone(true);
             return tripRepository.save(trip);
         }
-        throw new CardNotFoundException();
+        logger.error("Failed to find trip: " + tripId + " !!!");
+        throw new InvalidDataException("Failed to find trip: " + tripId + " !!!");
     }
 }
