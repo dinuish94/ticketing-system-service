@@ -44,7 +44,7 @@ public class Application implements CommandLineRunner {
         System.out.println(cardRepository.save(card4).getTokenRef());
 
         Visitor passenger = new Visitor();
-        passenger.setName("Visitor 1");
+        passenger.setName("Peter Parker");
         passenger.setAddress("Negombo");
         passenger.setCard(card4);
         passengerRepository.save(passenger);
@@ -118,6 +118,5 @@ public class Application implements CommandLineRunner {
         busStop3.setLocation("Kandy");
         System.out.println(busStopRepository.save(busStop3));
 
-//        System.out.println(busRepository.findOne(bus.getId()).getId());
     }
 }
