@@ -30,6 +30,7 @@ public class Card {
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<Trip> trips;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<Daypass> daypasses;
 

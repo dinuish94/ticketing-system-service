@@ -1,7 +1,11 @@
 package lk.sliit.transport.publicTransportService.controllers;
 
 import lk.sliit.transport.publicTransportService.dtos.DaypassDTO;
+
 import lk.sliit.transport.publicTransportService.exceptions.InvalidDataException;
+
+import lk.sliit.transport.publicTransportService.exceptions.DaypassNotFound;
+
 import lk.sliit.transport.publicTransportService.models.Daypass;
 import lk.sliit.transport.publicTransportService.services.DaypassService;
 import org.slf4j.Logger;
@@ -29,5 +33,11 @@ public class DaypassController {
     public ResponseEntity<String> addDayPass(@RequestBody DaypassDTO daypassDTO) throws InvalidDataException {
         logger.info("Checking card ref of day pass" + daypassDTO.getCardRef() + "... ");
         return daypassService.addDayPass(daypassDTO);
+    }
+
+    @GetMapping("")
+    @ResponseBody
+    public boolean validateToken(@RequestParam("token") String token) throws DaypassNotFound {
+        return daypassService.getDayPassForCard(token);
     }
 }

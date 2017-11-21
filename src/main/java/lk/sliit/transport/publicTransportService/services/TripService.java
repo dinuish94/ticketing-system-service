@@ -3,10 +3,7 @@ package lk.sliit.transport.publicTransportService.services;
 import lk.sliit.transport.publicTransportService.dtos.JourneyDTO;
 import lk.sliit.transport.publicTransportService.dtos.TripDTO;
 import lk.sliit.transport.publicTransportService.exceptions.InvalidDataException;
-import lk.sliit.transport.publicTransportService.models.Bus;
-import lk.sliit.transport.publicTransportService.models.BusStop;
-import lk.sliit.transport.publicTransportService.models.Card;
-import lk.sliit.transport.publicTransportService.models.Trip;
+import lk.sliit.transport.publicTransportService.models.*;
 import lk.sliit.transport.publicTransportService.repositories.BusRepository;
 import lk.sliit.transport.publicTransportService.repositories.BusStopRepository;
 import lk.sliit.transport.publicTransportService.repositories.CardRepository;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,9 +85,10 @@ public class TripService {
 
         trip.setPrice(price);
         trip.setCurrentBalance(card.getBalance());
+        boolean hasDayPass = hasDayPass(card);
 
         // If the card has sufficient balance to complete the journey
-        if (price <= card.getBalance()) {
+        if (hasDayPass || price <= card.getBalance()) {
             logger.info("Passenger has sufficient balance in card ...");
             trip.setPayWithCash(0);
         } else {
@@ -104,6 +103,26 @@ public class TripService {
     }
 
     /**
+     * Checks whether a particular card has a day pass for today
+     *
+     * @param card
+     * @return true if a day pass is available
+     */
+    private Boolean hasDayPass(Card card) {
+        // Check if there is a day pass for today
+        Date today = new Date();
+        List<Daypass> daypasses = card.getDaypasses();
+        Boolean hasDayPass = false;
+
+        if (null != daypasses){
+            if (null != daypasses.stream().filter(daypass -> daypass.getDate()==today).collect(Collectors.toList())) {
+                hasDayPass = true;
+            }
+        }
+        return hasDayPass;
+    }
+
+    /**
      * Confirms the trip
      * Fee is reduced from the balance if sufficient amount is remaining in the card
      * Else record is marked as to be paid with cash
@@ -115,13 +134,18 @@ public class TripService {
         Trip trip = tripRepository.findOne(tripDTO.getId());
         Card card = cardRepository.findByTokenRef(tripDTO.getTokenRef());
 
-        // If the payment is to be made with Cash reduce it from the card balance
-        if (tripDTO.getPayWithCash() == 0) {
+        boolean hasDayPass = hasDayPass(card);
+
+        // If the payment is to be made with Card and has no day pass reduce it from the card balance
+        if (tripDTO.getPayWithCash() == 0 && !hasDayPass) {
             logger.info("Reducing fee from balance in card ...");
             card.setBalance(card.getBalance() - trip.getPrice());
             logger.info("Payment is complete ...");
             trip.setPaymentDone(true);
             cardRepository.save(card);
+        } else if (hasDayPass) {
+            // If a day pass is available mark it as payment done
+            trip.setPaymentDone(true);
         }
 
         trip.setPayWithCash(tripDTO.getPayWithCash());
