@@ -4,6 +4,8 @@ import lk.sliit.transport.publicTransportService.dtos.CardDTO;
 import lk.sliit.transport.publicTransportService.models.Passenger;
 import lk.sliit.transport.publicTransportService.services.CardService;
 import lk.sliit.transport.publicTransportService.services.PassengerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ public class PassengerController {
     @Autowired
     CardService cardService;
 
+    Logger logger = LoggerFactory.getLogger(PassengerController.class);
+
     @GetMapping("")
     @ResponseBody()
     public List<Passenger> addDayPass(){
@@ -33,6 +37,7 @@ public class PassengerController {
     @GetMapping("visitors/{cardRef}/cards")
     @ResponseBody()
     public CardDTO getCard(@PathVariable("cardRef") String cardRef){
+        logger.info("Checking card ref " + cardRef + "... ");
         return cardService.getCard(cardRef);
     }
 }
