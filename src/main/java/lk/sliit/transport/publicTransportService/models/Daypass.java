@@ -16,7 +16,6 @@ public class Daypass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "card_id")
     private Card card;
