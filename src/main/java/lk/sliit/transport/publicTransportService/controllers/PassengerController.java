@@ -35,4 +35,10 @@ public class PassengerController {
     public CardDTO getCard(@PathVariable("cardRef") String cardRef){
         return cardService.getCard(cardRef);
     }
+
+    @GetMapping("/{token}")
+    @ResponseBody()
+    public Lisr<Trip> findTrips (@PathVariable("token") String token){
+        return  passengerService.getTripsForPassenger(cardService.token);
+    }
 }

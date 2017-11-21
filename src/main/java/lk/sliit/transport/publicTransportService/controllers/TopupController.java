@@ -21,4 +21,10 @@ public class TopupController {
     public ResponseEntity<String> addDayPass(@RequestBody TopupDTO topupDTO){
         return topupService.addTopup(topupDTO);
     }
+
+    @GetMapping("/{token}")
+    @ResponseBody()
+    public List<TopUp> findTopUps(@PathVariable("token") String token){
+        return topupService.getTopUpsForPassenger(token);
+    }
 }
