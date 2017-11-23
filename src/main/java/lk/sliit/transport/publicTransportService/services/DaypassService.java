@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -39,7 +36,7 @@ public class DaypassService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public boolean getDayPassForCard(String token) throws DaypassNotFound {
+    public boolean getDayPassForCard(String token){
         Card card = cardRepository.findByTokenRef(token);
 
         if (null != card.getDaypasses()){

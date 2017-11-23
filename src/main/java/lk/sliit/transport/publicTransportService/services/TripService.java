@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +40,9 @@ public class TripService {
     @Autowired
     BusStopRepository busStopRepository;
 
+    @Autowired
+    DaypassService daypassService;
+
     Logger logger = LoggerFactory.getLogger(TripService.class);
 
     /**
@@ -59,14 +63,14 @@ public class TripService {
 
         Bus bus = busRepository.findOne(tripDTO.getBusId());
 
-        if (null == bus){
+        if (null == bus) {
             logger.error("Invalid Bus ID!");
             throw new InvalidDataException("Invalid Bus ID!");
         }
         BusStop startBusStop = busStopRepository.findByLocation(tripDTO.getStartLocation());
         BusStop endBusStop = busStopRepository.findByLocation(tripDTO.getEndLocation());
 
-        if (null == startBusStop || null == endBusStop){
+        if (null == startBusStop || null == endBusStop) {
             logger.error("Invalid Bus Stop Location!");
             throw new InvalidDataException("Invalid Bus Stop Location!");
         }
@@ -109,17 +113,7 @@ public class TripService {
      * @return true if a day pass is available
      */
     private Boolean hasDayPass(Card card) {
-        // Check if there is a day pass for today
-        Date today = new Date();
-        List<Daypass> daypasses = card.getDaypasses();
-        Boolean hasDayPass = false;
-
-        if (null != daypasses){
-            if (null != daypasses.stream().filter(daypass -> daypass.getDate()==today).collect(Collectors.toList())) {
-                hasDayPass = true;
-            }
-        }
-        return hasDayPass;
+        return daypassService.getDayPassForCard(card.getTokenRef());
     }
 
     /**
@@ -132,7 +126,7 @@ public class TripService {
      */
     public Trip confirmCheckin(TripDTO tripDTO) {
         Trip trip = tripRepository.findOne(tripDTO.getId());
-        Card card = cardRepository.findByTokenRef(tripDTO.getTokenRef());
+        Card card = cardRepository.findByTokenRef(trip.getCard().getTokenRef());
 
         boolean hasDayPass = hasDayPass(card);
 
@@ -161,7 +155,7 @@ public class TripService {
     public Trip checkout(TripDTO tripDTO) throws InvalidDataException {
         List<Trip> trips = tripRepository.findByCard(cardRepository.findByTokenRef(tripDTO.getTokenRef()));
 
-        if (null == trips){
+        if (null == trips) {
             logger.error("No trips found for this card!");
             throw new InvalidDataException("No trips found for this card!");
         }
