@@ -6,6 +6,8 @@ import lk.sliit.transport.publicTransportService.dtos.UserDTO;
 import lk.sliit.transport.publicTransportService.models.Account;
 import lk.sliit.transport.publicTransportService.models.Passenger;
 import lk.sliit.transport.publicTransportService.services.LoginService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +23,12 @@ public class UserController {
     @Autowired
     LoginService loginService;
 
+    Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @PostMapping("/")
     @ResponseBody()
     public AccountDTO authenticate(@RequestBody UserDTO userDTO) {
-        System.out.println("HERE");
+        logger.info("Checking username" + userDTO.getUsername() + "... ");
         return loginService.authenticateUser(userDTO);
     }
 
