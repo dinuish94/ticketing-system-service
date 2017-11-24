@@ -16,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Jonathan on 11/15/2017.
@@ -77,5 +80,20 @@ public class DaypassService {
             }
         }
         return false;
+    }
+
+    public List<DaypassDTO> getDaypassesForPassenger(String token){
+        List<DaypassDTO> daypassDTOS = new ArrayList<>();
+        Card card = cardRepository.findByTokenRef(token);
+        if (null != card.getDaypasses()){
+            card.getDaypasses().forEach(daypass->{
+                DaypassDTO daypassDTO = new DaypassDTO();
+                daypassDTO.setCardRef(daypass.getCard().getTokenRef());
+                daypassDTO.setPassDate(daypass.getDate());
+                daypassDTOS.add(daypassDTO);
+            });
+        }
+
+        return daypassDTOS;
     }
 }
