@@ -6,8 +6,8 @@ package lk.sliit.transport.publicTransportService.dtos;
 public class JourneyDTO {
 
     private long id;
-    private String startBusStop;
-    private String endBusStop;
+    private String startLocation;
+    private String endLocation;
     private double price;
     private double rate;
     private String tokenRef;
@@ -22,20 +22,20 @@ public class JourneyDTO {
         this.id = id;
     }
 
-    public String getStartBusStop() {
-        return startBusStop;
+    public String getStartLocation() {
+        return startLocation;
     }
 
-    public void setStartBusStop(String startBusStop) {
-        this.startBusStop = startBusStop;
+    public void setStartLocation(String startLocation) {
+        this.startLocation = startLocation;
     }
 
-    public String getEndBusStop() {
-        return endBusStop;
+    public String getEndLocation() {
+        return endLocation;
     }
 
-    public void setEndBusStop(String endBusStop) {
-        this.endBusStop = endBusStop;
+    public void setEndLocation(String endLocation) {
+        this.endLocation = endLocation;
     }
 
     public double getPrice() {
