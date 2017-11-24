@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.SocketUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -228,5 +229,11 @@ public class TripService {
         }
         logger.error("Failed to find trip: " + tripId + " !!!");
         throw new InvalidDataException("Failed to find trip: " + tripId + " !!!");
+    }
+
+    public List<Trip> getTripsByCard(String tokenRef) {
+        Card card = cardRepository.findByTokenRef(tokenRef);
+
+        return tripRepository.findByCardOrderByDateDescStartTimeDesc(card);
     }
 }

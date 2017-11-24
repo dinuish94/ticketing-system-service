@@ -1,6 +1,7 @@
 package lk.sliit.transport.publicTransportService.controllers;
 
 import lk.sliit.transport.publicTransportService.dtos.JourneyDTO;
+import lk.sliit.transport.publicTransportService.models.Trip;
 import lk.sliit.transport.publicTransportService.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,4 +23,11 @@ public class TripController {
     public List<JourneyDTO> getTripsForBus(@PathVariable long busId){
         return tripService.getTripsForBus(busId);
     }
+
+    @GetMapping("trips")
+    @ResponseBody
+    public List<Trip> getTripsForCard(@RequestParam(value="token", defaultValue = "") String token) {
+        return tripService.getTripsByCard(token);
+    }
+
 }
