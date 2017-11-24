@@ -2,8 +2,13 @@ package lk.sliit.transport.publicTransportService.controllers;
 
 import lk.sliit.transport.publicTransportService.dtos.CardDTO;
 import lk.sliit.transport.publicTransportService.models.Passenger;
+import lk.sliit.transport.publicTransportService.models.TopUp;
+import lk.sliit.transport.publicTransportService.models.Trip;
 import lk.sliit.transport.publicTransportService.services.CardService;
 import lk.sliit.transport.publicTransportService.services.PassengerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import lk.sliit.transport.publicTransportService.services.TopupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +28,11 @@ public class PassengerController {
 
     @Autowired
     CardService cardService;
+  
+    @Autowired
+    TopupService topupService;
+  
+    Logger logger = LoggerFactory.getLogger(PassengerController.class);
 
     @GetMapping("")
     @ResponseBody()
@@ -33,6 +43,19 @@ public class PassengerController {
     @GetMapping("visitors/{cardRef}/cards")
     @ResponseBody()
     public CardDTO getCard(@PathVariable("cardRef") String cardRef){
+        logger.info("Checking card ref " + cardRef + "... ");
         return cardService.getCard(cardRef);
+    }
+
+    @GetMapping("{token}/topups")
+    @ResponseBody
+    public List<TopUp> getTopUpsForPassenger(@PathVariable("token") String token) {
+        return topupService.getTopUpsForPassenger(token);
+    }
+
+    @GetMapping("{token}/trips")
+    @ResponseBody
+    public List<Trip> getTripsForPassenger(@PathVariable("token") String token) {
+        return passengerService.getTripsForPassenger(token);
     }
 }

@@ -21,6 +21,7 @@ public class BusStopController {
     @GetMapping("")
     @ResponseBody
     public List<BusStop> getAllBusStops(){
+
         return busStopService.getAllBusStops();
     }
 }
