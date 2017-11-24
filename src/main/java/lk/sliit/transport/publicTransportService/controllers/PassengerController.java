@@ -1,10 +1,13 @@
 package lk.sliit.transport.publicTransportService.controllers;
 
 import lk.sliit.transport.publicTransportService.dtos.CardDTO;
+import lk.sliit.transport.publicTransportService.dtos.DaypassDTO;
+import lk.sliit.transport.publicTransportService.models.Daypass;
 import lk.sliit.transport.publicTransportService.models.Passenger;
 import lk.sliit.transport.publicTransportService.models.TopUp;
 import lk.sliit.transport.publicTransportService.models.Trip;
 import lk.sliit.transport.publicTransportService.services.CardService;
+import lk.sliit.transport.publicTransportService.services.DaypassService;
 import lk.sliit.transport.publicTransportService.services.PassengerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,9 @@ public class PassengerController {
   
     @Autowired
     TopupService topupService;
+
+    @Autowired
+    DaypassService daypassService;
   
     Logger logger = LoggerFactory.getLogger(PassengerController.class);
 
@@ -57,5 +63,11 @@ public class PassengerController {
     @ResponseBody
     public List<Trip> getTripsForPassenger(@PathVariable("token") String token) {
         return passengerService.getTripsForPassenger(token);
+    }
+
+    @GetMapping("{token}/daypasses")
+    @ResponseBody
+    public List<DaypassDTO> getDaypassesForPassenger(@PathVariable("token") String token) {
+        return daypassService.getDaypassesForPassenger(token);
     }
 }

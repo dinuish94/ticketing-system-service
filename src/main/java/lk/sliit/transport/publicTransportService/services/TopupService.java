@@ -14,7 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,6 +56,9 @@ public class TopupService {
             throw new InvalidDataException("Invalid Token!");
         }
 
+        Date date = Calendar.getInstance().getTime();
+
+        topUp.setDate(date);
         topUp.setCard(card);
         topUp.setAmount(topupDTO.getAmount());
         card.setBalance(card.getBalance()+topupDTO.getAmount());

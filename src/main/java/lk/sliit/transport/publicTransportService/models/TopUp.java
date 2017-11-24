@@ -3,6 +3,7 @@ package lk.sliit.transport.publicTransportService.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by dinukshakandasamanage on 11/12/17.
@@ -21,6 +22,16 @@ public class TopUp {
     private Card card;
 
     private double amount;
+
+    private Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public double getAmount() {
         return amount;
