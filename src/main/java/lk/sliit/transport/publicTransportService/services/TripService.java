@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.SocketUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -233,6 +234,6 @@ public class TripService {
     public List<Trip> getTripsByCard(String tokenRef) {
         Card card = cardRepository.findByTokenRef(tokenRef);
 
-        return tripRepository.findByCardByOrderByDateAndOrderByStartTime(card);
+        return tripRepository.findByCardOrderByDateDescStartTimeDesc(card);
     }
 }
