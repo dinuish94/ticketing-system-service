@@ -7,6 +7,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by dinukshakandasamanage on 11/11/17.
  */
@@ -31,6 +34,9 @@ public class Application implements CommandLineRunner {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    TripRepository tripRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -117,6 +123,74 @@ public class Application implements CommandLineRunner {
         BusStop busStop3 = new BusStop();
         busStop3.setLocation("Kandy");
         System.out.println(busStopRepository.save(busStop3));
+
+        Trip trip = new Trip();
+        trip.setBus(bus);
+        trip.setStartBusStop(busStop);
+        trip.setEndBusStop(busStop1);
+        trip.setStartTime("00:30");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        String datestring = "2017/11/22 00:00";
+        Date date = format.parse(datestring);
+
+        trip.setDate(date);
+
+        Trip trip1 = new Trip();
+        trip1.setBus(bus);
+        trip1.setStartBusStop(busStop);
+        trip1.setEndBusStop(busStop1);
+        trip1.setStartTime("08:30");
+
+        String datestring1 = "2017/11/22 00:00";
+        Date date1 = format.parse(datestring1);
+
+        trip1.setDate(date1);
+
+        Trip trip2 = new Trip();
+        trip2.setBus(bus);
+        trip2.setStartBusStop(busStop);
+        trip2.setEndBusStop(busStop1);
+        trip2.setStartTime("11:00");
+
+        String datestring2 = "2017/11/22 00:00";
+        Date date2 = format.parse(datestring2);
+
+        trip2.setDate(date2);
+
+        Trip trip3 = new Trip();
+        trip3.setBus(bus);
+        trip3.setStartBusStop(busStop);
+        trip3.setEndBusStop(busStop1);
+        trip3.setStartTime("15:30");
+
+        String datestring3 = "2017/11/22 00:00";
+        Date date3 = format.parse(datestring3);
+
+        trip3.setDate(date3);
+
+        Trip trip4 = new Trip();
+        trip4.setBus(bus);
+        trip4.setStartBusStop(busStop);
+        trip4.setEndBusStop(busStop1);
+        trip4.setStartTime("22:00");
+
+        String datestring5 = "2017/11/21 00:00";
+        Date date5 = format.parse(datestring5);
+
+        trip4.setDate(date5);
+
+        tripRepository.save(trip);
+
+        tripRepository.save(trip1);
+
+        tripRepository.save(trip2);
+
+        tripRepository.save(trip3);
+
+        tripRepository.save(trip4);
+
+
 
 //        System.out.println(busRepository.findOne(bus.getId()).getId());
     }
