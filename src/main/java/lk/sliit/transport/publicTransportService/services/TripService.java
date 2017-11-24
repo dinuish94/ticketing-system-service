@@ -229,4 +229,10 @@ public class TripService {
         logger.error("Failed to find trip: " + tripId + " !!!");
         throw new InvalidDataException("Failed to find trip: " + tripId + " !!!");
     }
+
+    public List<Trip> getTripsByCard(String tokenRef) {
+        Card card = cardRepository.findByTokenRef(tokenRef);
+
+        return tripRepository.findByCardByOrderByDateAndOrderByStartTime(card);
+    }
 }

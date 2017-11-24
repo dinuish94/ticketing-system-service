@@ -15,4 +15,5 @@ import java.util.List;
 public interface TripRepository extends CrudRepository<Trip, Long> {
 
     List<Trip> findByCard(Card card);
+    List<Trip>findByCardByOrderByDateAndOrderByStartTime(Card card);
 }
