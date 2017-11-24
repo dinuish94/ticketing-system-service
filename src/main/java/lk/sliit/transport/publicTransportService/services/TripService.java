@@ -188,7 +188,7 @@ public class TripService {
     public List<JourneyDTO> getTripsForBus(long busId) {
         List<JourneyDTO> journeys = new ArrayList<>();
 
-        logger.info("Retrieving trips for" + busId + "...");
+        logger.info("Retrieving trips for " + busId + "...");
         tripRepository.findAll().forEach(trip -> {
             if (trip.getBus().getId() == busId && !trip.isCompleted() && trip.getPayWithCash() == 1 && !trip.isPaymentDone()) {
                 JourneyDTO journey = new JourneyDTO();
@@ -203,8 +203,8 @@ public class TripService {
                     journey.setPassenger(trip.getCard().getAccount().getDailyPassenger().getName());
                 }
 
-                journey.setStartBusStop(trip.getStartBusStop().getLocation());
-                journey.setEndBusStop(trip.getEndBusStop().getLocation());
+                journey.setStartLocation(trip.getStartBusStop().getLocation());
+                journey.setEndLocation(trip.getEndBusStop().getLocation());
                 journey.setTokenRef(trip.getCard().getTokenRef());
                 journey.setDistance(trip.getDistance());
                 journeys.add(journey);
